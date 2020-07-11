@@ -1,6 +1,6 @@
-zone "okd.local" {
+zone "mycluster.demo" {
     type master;
-    file "/etc/named/zones/db.okd.local"; # zone file path
+    file "/etc/named/zones/db.mycluster.demo"; # zone file path
 };
 
 zone "1.168.192.in-addr.arpa" {
