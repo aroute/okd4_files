@@ -40,8 +40,9 @@ chmod +x jq
 sudo mv jq /usr/local/bin/
 jq --version
 
-curl -L https://mirror.openshift.com/pub/openshift-v4/clients/helm/latest/helm-linux-amd64 -o /usr/local/bin/helm
+sudo curl -L https://mirror.openshift.com/pub/openshift-v4/clients/helm/latest/helm-linux-amd64 -o /usr/local/bin/helm
 sudo chmod +x /usr/local/bin/helm
+sudo chown demo:demo /usr/local/bin/helm
 helm version -c
 ```
 #### Git clone
@@ -67,7 +68,7 @@ Reboot / configure skytap DNS for 192.168.1.210
 ```
 sudo systemctl status named
 dig mycluster.demo
-dig –x 192.168.1.210
+dig -x 192.168.1.210
 ```
 #### NFS
 ```
@@ -112,8 +113,8 @@ curl localhost:8080
 ```
 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
-tar -zxvf 
-tar -zxvf 
+tar -zxvf openshift-client-linux.tar.gz
+tar -zxvf openshift-install-linux.tar.gz
 sudo mv kubectl oc openshift-install /usr/local/bin/
 rm *.tar.gz
 ```
@@ -133,7 +134,10 @@ openshift-install version
 ```
 #### SSH Keygen
 ```
-ssh-keygen
+ssh-keygen -t rsa -P ""
+cat ~/.ssh/id_rsa.pub >> authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
 ```
 #### Installation directory
 ```
@@ -164,9 +168,7 @@ curl localhost:8080/okd4/metadata.json
 ```
 cd /var/www/html/okd4/
 sudo wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.4.3-x86_64-metal.x86_64.raw.gz
-sudo wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.4.3-x86_64-metal.x86_64.raw.gz.sig
-sudo mv ... cos.raw.xz
-sudo mv ... cos.raw.xz.sig
+sudo mv rhcos-4.4.3-x86_64-metal.x86_64.raw.gz cos.raw.gz
 sudo chown -R apache: /var/www/html/
 sudo chmod -R 755 /var/www/html/
 cd ~/
@@ -186,24 +188,27 @@ ls -l /var/www/html/okd4/
 ```
 #### Download CoreOS ISO for Skytap Asset
 ```
-cd ~/Downloads
-wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.4.3-x86_64-installer.x86_64.iso
+# cd ~/Downloads
+# wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.4.3-x86_64-installer.x86_64.iso
 ```
 
 #### Boot install
 ```
-coreos.inst=yes
-coreos.inst.install_dev=sda 
-coreos.inst.image_url=http://192.168.1.210:8080/okd4/cos.raw.xz 
+coreos.inst.install_dev=sda
+coreos.inst.image_url=http://192.168.1.210:8080/okd4/cos.raw.gz
 coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/bootstrap.ign
 
-coreos.inst=yes
-coreos.inst.install_dev=sda 
-coreos.inst.image_url=http://192.168.1.210:8080/okd4/cos.raw.xz 
+coreos.inst.install_dev=sda
+coreos.inst.image_url=http://192.168.1.210:8080/okd4/cos.raw.gz
 coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/master.ign
 
-coreos.inst=yes
-coreos.inst.install_dev=sda 
-coreos.inst.image_url=http://192.168.1.210:8080/okd4/cos.raw.xz 
+coreos.inst.install_dev=sda
+coreos.inst.image_url=http://192.168.1.210:8080/okd4/cos.raw.gz
 coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/worker.ign
+```
+
+#### Monitor
+
+```
+openshift-install --dir=install_dir/ wait-for bootstrap-complete --log-level=info
 ```
