@@ -1,5 +1,16 @@
 # okd4_files
 
+|   | Machine  | IP  |
+|---|---|---|
+| 1 | services | 192.168.1.210 |
+| 2 | bootstrap | 192.168.1.200 |
+| 3 | control-plane-1 | 192.168.1.201 |
+| 4 | control-plane-2 | 192.168.1.202 |
+| 5 | control-plane-3 | 192.168.1.203 |
+| 6 | ccompute-1 | 192.168.1.204 |
+| 7 | ccompute-2 | 192.168.1.205 |
+| 8 | ccompute-3 | 192.168.1.206 |
+
 ### Services
 
 #### Build CentOS 8
