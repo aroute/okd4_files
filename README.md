@@ -1,5 +1,9 @@
 # okd4_files
 
+#### Topology
+
+Base domain: mycluster.demo
+
 |   | Machine  | IP  |
 |---|---|---|
 | 1 | services | 192.168.1.210 |
@@ -11,9 +15,7 @@
 | 7 | ccompute-2 | 192.168.1.205 |
 | 8 | ccompute-3 | 192.168.1.206 |
 
-### Services
-
-#### Build CentOS 8
+### Services Build CentOS 8
 
 #### Post-install
 
