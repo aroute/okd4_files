@@ -21,7 +21,7 @@ Base domain: mycluster.demo
 
 ```
 visudo
-ALL            ALL = (ALL) NOPASSWD: ALL
+ALL   ALL = (ALL) NOPASSWD: ALL
 
 sudo dnf install -y epel-release
 sudo dnf update -y
@@ -111,6 +111,11 @@ curl localhost:8080
 ```
 #### OpenShift Installer
 ```
+## 4.4.3
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.3/openshift-client-linux.tar.gz
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.3/openshift-install-linux.tar.gz
+
+## 4.4.11
 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
 tar -zxvf openshift-client-linux.tar.gz
