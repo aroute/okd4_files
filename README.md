@@ -184,6 +184,12 @@ sudo chmod -R 755 /var/www/html/
 cd ~/
 ls -l /var/www/html/okd4/
 ```
+#### Download CoreOS ISO for Skytap Asset
+```
+cd ~/Downloads
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.4.3-x86_64-installer.x86_64.iso
+```
+
 #### Boot install
 ```
 coreos.inst=yes
