@@ -79,11 +79,13 @@ sudo chmod -R 777 /var/nfsshare
 sudo chown -R nobody:nobody /var/nfsshare
 echo '/var/nfsshare 192.168.1.0/24(rw,sync,no_root_squash,no_all_squash,no_wdelay)' | sudo tee /etc/exports
 sudo setsebool -P nfs_export_all_rw 1
+echo '/var/nfsshare 192.168.1.0/24(rw,sync,no_root_squash,no_all_squash,no_wdelay)' | sudo tee /etc/exports
 sudo systemctl restart nfs-server
 sudo firewall-cmd --permanent --zone=public --add-service mountd
 sudo firewall-cmd --permanent --zone=public --add-service rpc-bind
 sudo firewall-cmd --permanent --zone=public --add-service nfs
 sudo firewall-cmd --reload
+
 ```
 #### HA Proxy
 ```
@@ -140,7 +142,7 @@ openshift-install version
 #### SSH Keygen
 ```
 ssh-keygen -t rsa -P ""
-cat ~/.ssh/id_rsa.pub >> authorized_keys
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 ```
@@ -151,7 +153,11 @@ mkdir install_dir
 cp okd4_files/install-config.yaml ./install_dir
 ```
 
-Copy id and pull key.
+Copy id, pull key and backup file.
+
+```
+cp ./install_dir/install-config.yaml ./install_dir/install-config.yaml.bak
+```
 
 ```
 openshift-install create manifests --dir=install_dir/
@@ -217,3 +223,59 @@ coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/worker.ign
 ```
 openshift-install --dir=install_dir/ wait-for bootstrap-complete --log-level=info
 ```
+
+#### Post Bootstrap process.
+
+Shutdown bootstrap computer when above command finishes.
+
+#### Edit HA Proxy
+```
+sudo sed '/ bootstrap /s/^/#/' /etc/haproxy/haproxy.cfg
+sudo systemctl reload haproxy
+```
+#### Approve CSRs
+```
+export KUBECONFIG=~/install_dir/auth/kubeconfig
+oc whoami
+oc get nodes
+oc get csr
+oc get csr -ojson | jq -r '.items[] | select(.status == {} ) | .metadata.name' | xargs oc adm certificate approve
+```
+
+#### Monitor Operators
+```
+oc get clusteroperators
+```
+
+#### Kube-Admin password
+```
+kubeadmin
+cat install_dir/auth/kubeadmin-password
+```
+
+#### Console
+```
+https://console-openshift-console.apps.lab.mycluster.demo/
+```
+
+#### Registry Storage
+Change the managmentState: from Removed to Managed. Under storage: add the pvc: and claim: blank to attach the PV and save changes automatically. PV should bind at the end of this process.
+```
+oc create -f okd4_files/registry_pv.yaml
+oc get pv
+oc edit configs.imageregistry.operator.openshift.io
+managementStage: Managedstorage:
+    pvc:
+      claim:
+```
+
+#### Deploy Wordpress
+```
+du -sh /var/nfsshare/registry
+oc new-project wordpress-test
+oc new-app centos/php-73-centos7~https://github.com/WordPress/WordPress.git
+oc expose svc/wordpress
+oc new-app centos/mariadb-103-centos7 --name mariadb --env MYSQL_DATABASE=wordpress --env MYSQL_USER=wordpress --env MYSQL_PASSWORD=wordpress
+```
+Open the OpenShift console and browse to the WordPress-test project. 
+https://medium.com/@craig_robinson/guide-installing-an-okd-4-5-cluster-508a2631cbee
