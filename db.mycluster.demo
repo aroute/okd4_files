@@ -11,26 +11,26 @@ $TTL    604800
     IN      NS      services
 
 ; name servers - A records
-services.mycluster.demo.             IN      A      192.168.1.210
+services.mycluster.demo.             IN      A      192.168.1.200
 
 ; OpenShift Container Platform Cluster - A records
 bootstrap.lab.mycluster.demo.        IN      A      192.168.1.200
-control-plane-1.lab.mycluster.demo.  IN      A      192.168.1.201
-control-plane-2.lab.mycluster.demo.  IN      A      192.168.1.202
-control-plane-3.lab.mycluster.demo.  IN      A      192.168.1.203
-compute-1.lab.mycluster.demo.        IN      A      192.168.1.204
-compute-2.lab.mycluster.demo.        IN      A      192.168.1.205
-compute-3.lab.mycluster.demo.        IN      A      192.168.1.206
+controlplane-1.lab.mycluster.demo.   IN      A      192.168.1.201
+controlplane-2.lab.mycluster.demo.   IN      A      192.168.1.202
+controlplane-3.lab.mycluster.demo.   IN      A      192.168.1.203
+compute-1.lab.mycluster.demo.        IN      A      192.168.1.211
+compute-2.lab.mycluster.demo.        IN      A      192.168.1.212
+compute-3.lab.mycluster.demo.        IN      A      192.168.1.213
 
 ; OpenShift internal cluster IPs - A records
-api.lab.mycluster.demo.              IN      A      192.168.1.210
-api-int.lab.mycluster.demo.          IN      A      192.168.1.210
-*.apps.lab.mycluster.demo.           IN      A      192.168.1.210
+api.lab.mycluster.demo.              IN      A      192.168.1.200
+api-int.lab.mycluster.demo.          IN      A      192.168.1.200
+*.apps.lab.mycluster.demo.           IN      A      192.168.1.200
 etcd-0.lab.mycluster.demo.           IN      A      192.168.1.201
 etcd-1.lab.mycluster.demo.           IN      A      192.168.1.202
 etcd-2.lab.mycluster.demo.           IN      A      192.168.1.203
-console-openshift-console.apps.lab.mycluster.demo.     IN     A     192.168.1.210
-oauth-openshift.apps.lab.mycluster.demo.     IN     A     192.168.1.210
+console-openshift-console.apps.lab.mycluster.demo.     IN     A     192.168.1.200
+oauth-openshift.apps.lab.mycluster.demo.               IN     A     192.168.1.200
 
 ; OpenShift internal cluster IPs - SRV records
 _etcd-server-ssl._tcp.lab.mycluster.demo.    86400     IN    SRV     0    10    2380    etcd-0.lab
